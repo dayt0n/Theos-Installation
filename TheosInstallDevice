@@ -1,0 +1,51 @@
+#!/bin/sh
+
+#  TheosInstall.sh
+#  
+#
+#  Created by Dayton Hasty on 8/1/14.
+#
+
+clear
+if [[ `whoami` = mobile ]]; then
+echo "Sorry, please switch to root user using the su command and rerun this program."
+sleep 4
+exit
+else
+echo "Good, it seems as though your are root. Continuing..."
+sleep 1
+fi
+
+clear
+echo "Installing Theos to Device..."
+sleep 1
+cd /
+cd /etc/apt/sources.list.d
+mkfile -nv 0 coredev.nl.list
+sleep 0.5
+mkfile -nv 0 howett.net.list
+clear
+echo "Writing Information to Files..."
+sleep 1
+echo "deb http://coredev.nl/cydia iphone main" >> coredev.nl.list
+sleep 0.5
+echo "deb http://nix.howett.net/theos ./" >> howett.net.list
+sleep 0.5
+clear
+echo "Updating Package Lists..."
+apt-get update
+sleep 1
+clear
+echo "Installing Perl and Theos... [This may take a while...]"
+sleep 4
+clear
+yes | apt-get install perl net.howett.theos
+sleep 2
+clear
+echo "Done installing Theos. Please run TheosInstallMac on your Mac."
+sleep 2
+cd /
+cd /usr/bin
+rm TheosInstallDevice
+cd
+exit

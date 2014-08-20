@@ -1,0 +1,89 @@
+#!/bin/sh
+
+#  TheosInstallMac.sh
+#  
+#
+#  Created by Dayton Hasty on 8/1/14.
+#
+
+clear
+read -p "Are you root or using your normal terminal mode? [root or normal] " isroot
+if [[ $isroot = normal ]] ; then
+    echo "Please enter the command [sudo -s] and type in your password, then retry this program."
+    sleep 5
+    exit
+else
+    echo "Good."
+    sleep 1
+    clear
+fi
+#Done with root
+
+read -p "Is Xcode AND Xcode Command Line Utilities installed? [yes or no]: " installedxcode
+if [[ $installedxcode = no ]] ; then
+    echo "Please download Xcode from the App Store and execute the command [xcode-select --install] to install the comamnd line utilities."
+    sleep 5
+    exit
+else
+    echo "Good."
+    sleep 1
+fi
+#Now I will begin the main installation.
+
+clear
+echo "Installing Theos..."
+cd /
+mkdir /opt/theos
+export THEOS=/opt/theos
+sleep 1
+cd /opt/theos
+git clone git://github.com/DHowett/theos.git $THEOS
+sleep 0.5
+clear
+echo "Installing Codesign Utility..."
+sleep 2
+cd bin
+git clone git://git.saurik.com/ldid.git
+cd ldid
+git submodule update --init
+./make.sh
+cp -f ./ldid $THEOS/bin/ldid
+sleep 1
+clear
+echo "Done Installing Codesign Utility."
+sleep 1
+clear
+echo "Configuring Theos..."
+sleep 3
+cd /usr/bin
+mkfile -nv 0 TheosCreate
+echo "$THEOS/bin/nic.pl" >> TheosCreate
+sleep 1
+chmod a+x TheosCreate
+sleep 0.5
+cd /
+clear
+cd
+read -p "What is the IP of the iDevice you are going to use Theos on? " ipaddress
+sleep 1
+echo "export THEOS=/opt/theos" >> .bash_profile
+echo "export THEOS_DEVICE_IP=$ipaddress THEOS_DEVICE_PORT=22" >> .bash_profile
+sleep 1
+clear
+echo "Done Installing Theos."
+sleep 0.5
+echo "Cleaning Up..."
+sleep 2
+echo "Done!"
+sleep 1
+echo "Now, if you haven't already, run TheosInstallDevice on your device."
+sleep 0.5
+echo " "
+echo " "
+echo " "
+echo "To use Theos, navigate to the directory you want to install it to using the [cd] command. Then, execute the command [$THEOS/bin/nic.pl]."
+sleep 5
+killall Terminal
+killall iTerm
+exit
+
